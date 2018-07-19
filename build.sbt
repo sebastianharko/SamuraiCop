@@ -10,3 +10,4 @@ libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.3"
 
 libraryDependencies += "org.postgresql" % "postgresql" % "42.2.1"
 
+libraryDependencies += "org.json4s" %% "json4s-native" % "3.5.4"
