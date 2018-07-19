@@ -7,7 +7,7 @@ import akka.http.scaladsl.Http
 import akka.http.scaladsl.model.sse.ServerSentEvent
 import akka.http.scaladsl.server.Directives._
 import akka.stream.alpakka.postgresqlcdc.scaladsl.ChangeDataCapture
-import akka.stream.alpakka.postgresqlcdc.{ChangeSet, PgCdcSourceSettings, PostgreSQLInstance, RowInserted}
+import akka.stream.alpakka.postgresqlcdc.{PgCdcSourceSettings, PostgreSQLInstance, RowInserted}
 import akka.stream.scaladsl.{BroadcastHub, Keep, Source}
 import akka.stream.{ActorMaterializer, Attributes}
 import org.json4s.DefaultFormats
@@ -35,10 +35,12 @@ object Main extends App {
 
   val singleProducer: Source[UserRegistered, NotUsed] =
     ChangeDataCapture.source(postgreSQLInstance, PgCdcSourceSettings())
-      .log("postgresqlcdc", cs ⇒ s"captured changes: ${cs.toString}")
+      .mapConcat(_.changes)
+      .log("postgresqlcdc", cs ⇒ s"captured change: ${cs.toString}")
+      .throttle(1, per = 500 milliseconds)
       .withAttributes(Attributes.logLevels(onElement = Logging.InfoLevel))
       .collect {
-        case ChangeSet(_, _, _, RowInserted(_, "users", _, _, fields) :: Nil ) ⇒
+        case RowInserted(_, "users", _, _, fields)  ⇒
           val m = fields.map(f ⇒ f.columnName → f.value).toMap
           val lat = m("lat").toDouble
           val lng = m("lng").toDouble
