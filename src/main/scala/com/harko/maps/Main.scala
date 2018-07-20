@@ -1,4 +1,4 @@
-package com.harko.samuraicop
+package com.harko.maps
 
 import akka.NotUsed
 import akka.actor.ActorSystem
@@ -40,10 +40,9 @@ object Main extends App {
       .throttle(1, per = 500 milliseconds)
       .withAttributes(Attributes.logLevels(onElement = Logging.InfoLevel))
       .collect {
-        case RowInserted(_, "users", _, _, fields)  ⇒
-          val m = fields.map(f ⇒ f.columnName → f.value).toMap
-          val lat = m("lat").toDouble
-          val lng = m("lng").toDouble
+        case r @ RowInserted(_, "users", _, _, _)  ⇒
+          val lat = r.data("lat").toDouble
+          val lng = r.data("lng").toDouble
           UserRegistered(lat, lng)
       }
       .toMat(BroadcastHub.sink(bufferSize = 256))(Keep.right)
