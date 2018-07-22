@@ -1,7 +1,27 @@
-# SamuraiCop
+# Create table
 
-# SQL Script
-sql```
+```
+ ----------------------------
+-- Table structure for users
+-- ----------------------------
+DROP TABLE IF EXISTS "public"."users";
+CREATE TABLE "public"."users" (
+  "id" int4 NOT NULL,
+  "lat" float8 NOT NULL,
+  "lng" varchar(255) COLLATE "pg_catalog"."default" NOT NULL
+)
+;
+
+-- ----------------------------
+-- Primary Key structure for table users
+-- ----------------------------
+ALTER TABLE "public"."users" ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
+```
+
+
+# Insert Data
+
+```
 DELETE FROM users;
 DO $$
 BEGIN

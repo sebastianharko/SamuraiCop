@@ -4,7 +4,7 @@ version := "0.1"
 
 scalaVersion := "2.12.6"
 
-libraryDependencies += "com.lightbend.akka" %% "akka-stream-alpakka-postgresql-cdc" % "0.18+200-8ffaeda7"
+libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.12" 
 
 libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.3"
 
