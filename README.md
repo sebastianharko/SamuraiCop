@@ -1,4 +1,4 @@
-# Create table
+# How to run the demo
 
 # Run PostgreSQL
 
