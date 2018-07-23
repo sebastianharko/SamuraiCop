@@ -28,21 +28,21 @@ object Main extends App {
   val jdbcConnectionString = s"jdbc:postgresql://localhost:$postgreSQLPortNumber/pgdb1?user=pguser&password=pguser"
 
   val postgreSQLInstance = PostgreSQLInstance(jdbcConnectionString, "samurai_cop")
+  val pgCdcSettings = PgCdcSourceSettings().withCreateSlotOnStart(true).withDropSlotOnFinish(true)
 
   implicit val formats = DefaultFormats
 
   case class UserRegistered(lat: Double, lng: Double)
 
   val singleProducer: Source[UserRegistered, NotUsed] =
-    ChangeDataCapture.source(postgreSQLInstance, PgCdcSourceSettings())
+    ChangeDataCapture.source(postgreSQLInstance, pgCdcSettings)
       .mapConcat(_.changes)
       .log("postgresqlcdc", cs ⇒ s"captured change: ${cs.toString}")
-      .throttle(1, per = 500 milliseconds)
       .withAttributes(Attributes.logLevels(onElement = Logging.InfoLevel))
       .collect {
-        case r @ RowInserted(_, "users", _, _, _)  ⇒
-          val lat = r.data("lat").toDouble
-          val lng = r.data("lng").toDouble
+        case RowInserted("public", "users", _, _, data)  ⇒
+          val lat = data("lat").toDouble
+          val lng = data("lng").toDouble
           UserRegistered(lat, lng)
       }
       .toMat(BroadcastHub.sink(bufferSize = 256))(Keep.right)
