@@ -34,7 +34,7 @@ ALTER TABLE "public"."users" ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
 ```
 
 
-# Look at map
+# Look at map , see updated in REAL TIME
 ```
 sbt run
 ```
