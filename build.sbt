@@ -2,16 +2,26 @@ name := "SamuraiCop"
 
 version := "0.1"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.13.1"
 
-libraryDependencies += "com.typesafe.akka" %% "akka-actor" % "2.5.12"
+resolvers ++= Seq(
+  Resolver.bintrayRepo("lonelyplanet", "maven"),
+  Resolver.bintrayRepo("brechtian", "maven")
+)
 
-libraryDependencies += "com.typesafe.akka" %% "akka-stream" % "2.5.12" 
+libraryDependencies += "com.brecht" %% "cdc" % "0.1"
 
-libraryDependencies += "com.typesafe.akka" %% "akka-http" % "10.1.3"
+val akkaVersion = "2.6.5"
+val akkaHttpVersion = "10.1.12"
 
-libraryDependencies += "org.postgresql" % "postgresql" % "42.2.1"
+libraryDependencies ++= Seq(
+  "com.brecht" %% "cdc" % "0.1",
+  "com.typesafe.akka" %% "akka-http" % akkaHttpVersion,
+  "com.lonelyplanet" %% "prometheus-akka-http" % "0.5.0",
+  "org.json4s" %% "json4s-native" % "3.6.9",
+  "com.typesafe.akka" %% "akka-stream" % akkaVersion,
+  "com.typesafe.akka" %% "akka-slf4j" % akkaVersion,
+  "com.zaxxer" % "HikariCP" % "3.4.2",
+  "ch.qos.logback" % "logback-classic" % "1.2.3"
+)
 
-libraryDependencies += "org.json4s" %% "json4s-native" % "3.5.4"
-
-libraryDependencies += "com.lihaoyi" %% "fastparse" % "1.0.0"

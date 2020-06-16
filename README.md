@@ -5,7 +5,7 @@
 You need a version that has logical decoding enabled. 
 Use docker: 
 ```
-docker run -p5432:5432 --name postgres94maps -d sebastianharko/postgres94
+docker run -p5432:5432 -it brechtian-docker-images.bintray.io/brecht/postgresql:12.2 
 ```
 
 # Connect to database
@@ -14,9 +14,9 @@ Connect to database using (some GUI).
 ```
 port = 5432
 host = localhost
-database = pgdb1
-user = pguser
-password = pguser
+database = docker 
+user = docker
+password = docker
 ```
 
 # Create table
@@ -39,7 +39,7 @@ ALTER TABLE "public"."users" ADD CONSTRAINT "users_pkey" PRIMARY KEY ("id");
 sbt run
 ```
 
-Open browser at http://localhost:8080/map.html
+Open browser at http://localhost:8080/map
 
 # Insert Random Data
 
